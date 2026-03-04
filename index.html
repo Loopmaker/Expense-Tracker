@@ -5,56 +5,181 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Expense Tracker</title>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <main class="container">
-    <!-- Top -->
-    <h1 class="heading">Expense Tracker</h1>
 
-    <section class="balance-container">
-      <h3>Your Balance</h3>
-      <h1 id="balance">₱0.00</h1>
-      <div class="transactions">
-        <div class="income">
-          <h3>Income</h3>
-          <p id="income-amount">₱0.00</p>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-mark">S</span>
+      <span class="logo-text">Spendly</span>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" data-view="transactions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Transactions
+      </button>
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="export-btn" id="export-csv">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        Export CSV
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Dashboard View -->
+    <section class="view active" id="view-dashboard">
+      <header class="page-header">
+        <div>
+          <p class="page-label">Overview</p>
+          <h1 class="page-title">Dashboard</h1>
         </div>
-        <div class="expense">
-          <h3>Expense</h3>
-          <p id="expense-amount">₱0.00</p>
+        <div class="month-filter">
+          <button class="month-btn" id="prev-month">&#8592;</button>
+          <span id="month-label">March 2026</span>
+          <button class="month-btn" id="next-month">&#8594;</button>
+        </div>
+      </header>
+
+      <div class="stats-grid">
+        <div class="stat-card balance-card">
+          <p class="stat-label">Net Balance</p>
+          <p class="stat-value" id="balance">₱0.00</p>
+          <div class="stat-badge" id="balance-trend"></div>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Total Income</p>
+          <p class="stat-value income-color" id="income-amount">₱0.00</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Total Expenses</p>
+          <p class="stat-value expense-color" id="expense-amount">₱0.00</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Transactions</p>
+          <p class="stat-value" id="tx-count">0</p>
+        </div>
+      </div>
+
+      <div class="dashboard-body">
+        <div class="chart-card">
+          <div class="card-header">
+            <h2>Spending Overview</h2>
+            <div class="chart-toggle">
+              <button class="toggle-btn active" data-chart="doughnut">Distribution</button>
+              <button class="toggle-btn" data-chart="bar">Category List</button>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="category-chart"></canvas>
+            <p class="chart-empty" id="chart-empty">No expense data yet</p>
+          </div>
+          <div class="chart-legend" id="chart-legend"></div>
+        </div>
+
+        <div class="recent-card">
+          <div class="card-header">
+            <h2>Recent Activity</h2>
+            <button class="text-btn" data-view="transactions" id="see-all-btn">See all →</button>
+          </div>
+          <ul class="tx-list" id="recent-list"></ul>
+          <p class="empty-state" id="recent-empty">No transactions this month</p>
         </div>
       </div>
     </section>
 
-    <!-- Body -->
+    <!-- Transactions View -->
+    <section class="view" id="view-transactions">
+      <header class="page-header">
+        <div>
+          <p class="page-label">All Activity</p>
+          <h1 class="page-title">Transactions</h1>
+        </div>
+        <button class="add-btn" id="open-modal">+ Add Transaction</button>
+      </header>
 
-    <section class="main-content">
-      <div class="transaction-container">
-        <h2>Recent Transactions</h2>
-          <ul id="transaction-list">
-            <!-- Transactions will be dynamically added here -->  
-          </ul>    
+      <div class="filters-bar">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="search-input" placeholder="Search transactions…">
+        </div>
+        <select id="filter-category">
+          <option value="all">All Categories</option>
+        </select>
+        <select id="filter-type">
+          <option value="all">All Types</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
       </div>
 
-      <div class="form-container">
-        <h2>Add New Transaction</h2>
-        <form id="transaction-form">
-          <div class="form-group">
-            <label for="description">Description</label>
-            <input type="text" id="description" placeholder="Enter description" required>
-          </div>
-          <div class="form-group">
-            <label for="amount">Amount</label>
-            <input type="number" id="amount" placeholder="Enter amount" required>
-            <small>Use negative numbers (-) for expenses</small>
-          </div>
-          <button type="submit">Add Transaction</button>
-        </form>
-      </div>
-      <h2>Hello</h2>
+      <ul class="tx-list full" id="transaction-list"></ul>
+      <p class="empty-state" id="tx-empty">No transactions found</p>
     </section>
+
+
+
   </main>
+
+  <!-- Add Transaction Modal -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Add Transaction</h2>
+        <button class="modal-close" id="close-modal">✕</button>
+      </div>
+
+      <div class="type-toggle">
+        <button class="type-btn active" data-type="income">Income</button>
+        <button class="type-btn" data-type="expense">Expense</button>
+      </div>
+
+      <form id="transaction-form">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input type="text" id="description" placeholder="e.g. Lunch at Jollibee" required autocomplete="off">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="amount">Amount (₱)</label>
+            <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label for="tx-date">Date</label>
+            <input type="date" id="tx-date" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" required>
+            <option value="" disabled selected>Select category</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="notes">Notes <span class="optional">(optional)</span></label>
+          <input type="text" id="notes" placeholder="Any extra details…" autocomplete="off">
+        </div>
+        <button type="submit" class="submit-btn">Add Transaction</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
   <script src="script.js"></script>
 </body>
 </html>
