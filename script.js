@@ -1,4 +1,7 @@
 // ── Constants ─────────────────────────────────
+// These are the fixed values used throughout the app.
+// Categories for transactions, plus some handy formatters
+// so we can present numbers and dates in a nice way.
 const CATEGORIES = [
   { id: 'food',          label: 'Food & Dining',    color: '#f59e0b', type: 'expense' },
   { id: 'transport',     label: 'Transport',         color: '#3b82f6', type: 'expense' },
@@ -14,7 +17,10 @@ const CATEGORIES = [
 const fmt = (n) => new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(n);
 const fmtDate = (d) => new Date(d).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
 
-// ── State ─────────────────────────────────────
+/* ── State ─────────────────────────────────────
+   application state held in memory, mirrors localStorage,
+   and tracks things like current view, filters, etc.
+*/
 let transactions = JSON.parse(localStorage.getItem('gastos_tx')) || [];
 let budgets = {};
 let activeType = 'income';
@@ -74,7 +80,8 @@ function setDefaultDate() {
   dateEl.max = today;
 }
 
-// ── Events ────────────────────────────────────
+// ── Event listeners ────────────────────────────
+// wire up UI controls so clicks/inputs do something useful
 function bindEvents() {
   // Nav
   navItems.forEach(btn => {
@@ -197,6 +204,7 @@ function updateCategoryForType() {
 // ── CRUD ──────────────────────────────────────
 function addTransaction(e) {
   e.preventDefault();
+  // take what the user typed, clean it up a bit
   const desc   = descEl.value.trim();
   const amount = parseFloat(amtEl.value);
   const date   = dateEl.value;
