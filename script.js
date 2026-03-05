@@ -462,3 +462,5 @@ function exportCSV() {
 
 // ── Start ─────────────────────────────────────
 init();
+
+// need to add responsiveness in mobile view, especially for the chart and summary sections. maybe stack them vertically and make the chart full width? also need to test the keyboard behavior on mobile when adding transactions, to ensure the form fields are accessible and not hidden behind the keyboard. also the transaction is nowhere to be found in mobile view.
