@@ -163,17 +163,26 @@ function bindEvents() {
 
   // Export
   document.getElementById('export-csv').addEventListener('click', exportCSV);
+  // Mobile nav
+  document.querySelectorAll('.mobile-nav-item[data-view]').forEach(btn => {
+    btn.addEventListener('click', () => switchView(btn.dataset.view));
+  });
+  document.getElementById('mobile-export').addEventListener('click', exportCSV);
 }
 
 function switchView(viewId, btn) {
   views.forEach(v => v.classList.remove('active'));
   navItems.forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-item[data-view]').forEach(n => n.classList.remove('active'));
+
   document.getElementById(`view-${viewId}`).classList.add('active');
-  if (btn) btn.classList.add('active');
-  else {
-    const targetBtn = document.querySelector(`.nav-item[data-view="${viewId}"]`);
-    if (targetBtn) targetBtn.classList.add('active');
-  }
+
+  const sideBtn = document.querySelector(`.nav-item[data-view="${viewId}"]`);
+  if (sideBtn) sideBtn.classList.add('active');
+  else if (btn) btn.classList.add('active');
+
+  const mobileBtn = document.querySelector(`.mobile-nav-item[data-view="${viewId}"]`);
+  if (mobileBtn) mobileBtn.classList.add('active');
 }
 
 function openModal() {
