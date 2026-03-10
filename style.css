@@ -38,7 +38,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Sidebar ─────────────────────────────────── */
+/* sidebar */
 .sidebar {
   width: var(--sidebar-w);
   min-height: 100vh;
@@ -129,7 +129,7 @@ body {
 .export-btn svg { width: 16px; height: 16px; }
 .export-btn:hover { background: var(--surface-2); color: var(--text); border-color: var(--border-hover); }
 
-/* ── Main ─────────────────────────────────────── */
+/* main area */
 .main {
   margin-left: var(--sidebar-w);
   flex: 1;
@@ -138,11 +138,11 @@ body {
   max-width: calc(100vw - var(--sidebar-w));
 }
 
-/* ── Views ───────────────────────────────────── */
+/* views */
 .view { display: none; }
 .view.active { display: block; }
 
-/* ── Page Header ─────────────────────────────── */
+/* page header */
 .page-header {
   display: flex;
   align-items: flex-end;
@@ -167,7 +167,7 @@ body {
   color: var(--text);
 }
 
-/* ── Month Filter ────────────────────────────── */
+/* month selector */
 .month-filter {
   display: flex;
   align-items: center;
@@ -192,7 +192,7 @@ body {
 }
 .month-btn:hover { color: var(--text); }
 
-/* ── Stats Grid ──────────────────────────────── */
+/* stats cards */
 .stats-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -253,7 +253,7 @@ body {
   color: var(--text-muted);
 }
 
-/* ── Dashboard Body ──────────────────────────── */
+/* dashboard layout */
 .dashboard-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -355,7 +355,7 @@ body {
 }
 .text-btn:hover { opacity: 0.7; }
 
-/* ── Transaction List ────────────────────────── */
+/* transaction list */
 .tx-list { list-style: none; }
 .tx-list.full { margin-top: 4px; }
 
@@ -440,7 +440,7 @@ body {
 
 .empty-state.show { display: block; }
 
-/* ── Filters Bar ─────────────────────────────── */
+/* filters bar */
 .filters-bar {
   display: flex;
   gap: 12px;

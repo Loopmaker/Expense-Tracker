@@ -1,7 +1,5 @@
-// ── Constants ─────────────────────────────────
-// These are the fixed values used throughout the app.
-// Categories for transactions, plus some handy formatters
-// so we can present numbers and dates in a nice way.
+// Constants used across the app: category list and format helpers
+// These help format amounts and dates for display.
 const CATEGORIES = [
   { id: 'food',          label: 'Food & Dining',    color: '#f59e0b', type: 'expense' },
   { id: 'transport',     label: 'Transport',         color: '#3b82f6', type: 'expense' },
@@ -17,9 +15,8 @@ const CATEGORIES = [
 const fmt = (n) => new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(n);
 const fmtDate = (d) => new Date(d).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
 
-/* ── State ─────────────────────────────────────
-   application state held in memory, mirrors localStorage,
-   and tracks things like current view, filters, etc.
+/* State kept in memory, mirrored to localStorage.
+   Includes transactions, view settings, and chart type.
 */
 let transactions = JSON.parse(localStorage.getItem('gastos_tx')) || [];
 let budgets = {};
@@ -29,7 +26,7 @@ let chartInstance = null;
 
 const viewDate = { year: new Date().getFullYear(), month: new Date().getMonth() };
 
-// ── DOM Refs ──────────────────────────────────
+// DOM element references
 const views       = document.querySelectorAll('.view');
 const navItems    = document.querySelectorAll('.nav-item');
 const modal       = document.getElementById('modal-backdrop');
@@ -46,7 +43,7 @@ const filterCatEl = document.getElementById('filter-category');
 const filterTypeEl= document.getElementById('filter-type');
 const toastEl     = document.getElementById('toast');
 
-// ── Init ──────────────────────────────────────
+// setup when page loads
 function init() {
   populateCategoryDropdowns();
   setDefaultDate();
@@ -80,8 +77,7 @@ function setDefaultDate() {
   dateEl.max = today;
 }
 
-// ── Event listeners ────────────────────────────
-// wire up UI controls so clicks/inputs do something useful
+// add event handlers to UI elements
 function bindEvents() {
   // Nav
   navItems.forEach(btn => {
@@ -210,7 +206,7 @@ function updateCategoryForType() {
   catEl.value = '';
 }
 
-// ── CRUD ──────────────────────────────────────
+// create, read, update, delete functions for transactions
 function addTransaction(e) {
   e.preventDefault();
   // take what the user typed, clean it up a bit
@@ -242,7 +238,7 @@ function save() {
   localStorage.setItem('gastos_tx', JSON.stringify(transactions));
 }
 
-// ── Render All ────────────────────────────────
+// refresh everything on screen
 function renderAll() {
   updateMonthLabel();
   renderSummary();
@@ -251,7 +247,7 @@ function renderAll() {
   renderTransactionList();
 }
 
-// ── Month Label ───────────────────────────────
+// update displayed month title and controls
 function updateMonthLabel() {
   const d = new Date(viewDate.year, viewDate.month);
   document.getElementById('month-label').textContent = d.toLocaleDateString('en-PH', { month: 'long', year: 'numeric' });
@@ -262,7 +258,7 @@ function updateMonthLabel() {
   nextBtn.style.cursor  = atCurrent ? 'default' : 'pointer';
 }
 
-// ── Summary ───────────────────────────────────
+// calculate and show income/expense summary
 function renderSummary() {
   const monthly = getMonthlyTransactions();
   const income  = monthly.filter(t => t.amount > 0).reduce((a, t) => a + t.amount, 0);
@@ -279,7 +275,7 @@ function renderSummary() {
   trend.style.color = balance >= 0 ? 'var(--income)' : 'var(--expense)';
 }
 
-// ── Chart ─────────────────────────────────────
+// draw the expense chart
 function renderChart() {
   const monthly = getMonthlyTransactions().filter(t => t.amount < 0);
   const ctx = document.getElementById('category-chart').getContext('2d');
@@ -355,7 +351,7 @@ function renderChart() {
   `).join('');
 }
 
-// ── Recent List (dashboard) ───────────────────
+// build a short list of the latest transactions
 function renderRecentList() {
   const listEl  = document.getElementById('recent-list');
   const emptyEl = document.getElementById('recent-empty');
@@ -367,7 +363,7 @@ function renderRecentList() {
   monthly.forEach(t => listEl.appendChild(createTxElement(t)));
 }
 
-// ── Full Transaction List ─────────────────────
+// show all transactions with optional filters
 function renderTransactionList() {
   const listEl  = document.getElementById('transaction-list');
   const emptyEl = document.getElementById('tx-empty');
@@ -412,7 +408,7 @@ function createTxElement(t, showDelete = false) {
 
 
 
-// ── Helpers ───────────────────────────────────
+// utility functions
 function getMonthlyTransactions() {
   return transactions.filter(t => {
     const d = new Date(t.date);
@@ -430,7 +426,7 @@ function showToast(msg) {
   setTimeout(() => toastEl.classList.remove('show'), 2500);
 }
 
-// ── Export CSV ────────────────────────────────
+// turn transactions into a CSV file for download
 function exportCSV() {
   if (transactions.length === 0) { showToast('No transactions to export'); return; }
   const header = 'Date,Description,Category,Type,Amount,Notes';
@@ -456,7 +452,7 @@ function exportCSV() {
   showToast('CSV exported ✓');
 }
 
-// ── Mobile keyboard fix ───────────────────────
+// adjust layout when mobile keyboard pops up
 (function() {
   if (window.visualViewport) {
     const adjust = () => {
@@ -469,7 +465,6 @@ function exportCSV() {
   }
 })();
 
-// ── Start ─────────────────────────────────────
+// initialize app
 init();
 
-// need to add responsiveness in mobile view, especially for the chart and summary sections. maybe stack them vertically and make the chart full width? also need to test the keyboard behavior on mobile when adding transactions, to ensure the form fields are accessible and not hidden behind the keyboard. also the transaction is nowhere to be found in mobile view.
