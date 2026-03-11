@@ -212,19 +212,12 @@ body {
 
 .balance-card {
   background: linear-gradient(135deg, var(--surface) 0%, #1a1d26 100%);
-  border-color: rgba(200,240,77,0.2);
+  border-color: var(--border);
   position: relative;
   overflow: hidden;
 }
 
-.balance-card::before {
-  content: '';
-  position: absolute;
-  top: -40px; right: -40px;
-  width: 130px; height: 130px;
-  background: radial-gradient(circle, rgba(200,240,77,0.08) 0%, transparent 70%);
-  border-radius: 50%;
-}
+
 
 .stat-label {
   font-size: 0.78rem;
