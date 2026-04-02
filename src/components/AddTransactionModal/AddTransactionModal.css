@@ -1,0 +1,179 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  width: 100%;
+  max-width: 440px;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+
+.modal-close:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+
+.type-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.type-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.type-btn.active[data-type='income']  { background: var(--income-dim);  color: var(--income); }
+.type-btn.active[data-type='expense'] { background: var(--expense-dim); color: var(--expense); }
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-family: 'DM Mono', monospace;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 7px;
+}
+
+.optional {
+  text-transform: none;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+  letter-spacing: 0;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 11px 13px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  transition: border-color 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6e80' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-color: var(--surface-2);
+  padding-right: 32px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.form-group input::placeholder { color: var(--text-muted); }
+
+.form-group input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--accent);
+  color: #0e0f14;
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: all 0.18s ease;
+}
+
+.submit-btn:hover {
+  background: #d4f56a;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .modal-backdrop { padding: 16px; }
+  .modal          { padding: 20px 16px; border-radius: 16px; }
+  .modal-header   { margin-bottom: 12px; }
+  .modal-header h2 { font-size: 1.1rem; }
+  .type-toggle    { margin-bottom: 12px; }
+  .form-group     { margin-bottom: 10px; }
+  .form-group label { margin-bottom: 4px; }
+  .form-group input,
+  .form-group select { padding: 9px 11px; font-size: 0.85rem; }
+  .form-row       { grid-template-columns: 1fr; gap: 0; }
+  .submit-btn     { padding: 11px; margin-top: 2px; }
+}
