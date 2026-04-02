@@ -1,34 +1,44 @@
 SpendLog
-A personal expense tracker built with React and TypeScript. You can log your income and expenses, see a breakdown of where your money goes, and export everything to a CSV file.
+A simple personal expense tracker built with React and TypeScript.
+You can track your income and expenses, see where your money goes, and export your data anytime.
 
-What it does
+Features
+Add income and expense transactions
+(description, amount, date, category)
+Dashboard with:
+Net balance
+Total income
+Total expenses
+Monthly spending chart
+Navigate between months to view past data
+Search and filter transactions easily
+Export all data to CSV
+Mobile-friendly design
 
-Add income or expense transactions with a description, amount, date, and category
-Dashboard shows your net balance, total income, total expenses, and a spending chart for the month
-You can go back and forth between months to see older data
-Filter and search through all your transactions
-Export everything to a CSV file
-Works on mobile too
+Tech Stack
+React — UI building
+TypeScript — type safety
+Vite — fast development and build tool
+Chart.js + react-chartjs-2 — charts and data visualization
+localStorage — saves data in the browser
+
+Important Notes
+Data is stored in your browser using localStorage
+→ If you clear your browser data, everything will be deleted
+Categories are currently hardcoded
+→ You can edit them in constants.ts (CATEGORIES array)
+Charts only show expenses
+→ Income is not included in the chart
+CSV export includes all transactions
+→ Not affected by filters or selected month
+
+Known Issues / Future Improvements
+No edit feature yet (only delete and re-add)
+No budget tracking or spending limits
+No backend (data is not synced anywhere)
 
 
-Tech used
-
-React — for building the UI
-TypeScript — so we catch mistakes before they happen
-Vite — runs the dev server and builds the project
-Chart.js + react-chartjs-2 — for the doughnut and bar charts
-localStorage — saves your data in the browser so it doesn't disappear on refresh
-
-
-A few things worth knowing
-Data is saved in the browser. Everything goes into localStorage, so if you clear your browser data, your transactions will be gone. There's no backend or database here.
-Categories are hardcoded. Right now the list of categories (Food, Transport, Bills, etc.) lives in constants.ts. If you want to add a new one, just add it to the CATEGORIES array there.
-The chart only shows expenses. Income transactions don't show up in the spending chart — only expenses do, grouped by category.
-CSV export gives you everything. It exports all transactions regardless of the current month filter.
-
-Known issues / things I'd improve later
-
-No way to edit a transaction after adding it (you'd have to delete and re-add)
-No budget limits or spending goals yet
-Data only lives in the browser — would be nice to sync it somewhere or at least let you import a CSV back in
-Imma add backend soon
+Future Plans
+Add backend support (save data online)
+Allow editing transactions
+Add budgets and spending goals
