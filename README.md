@@ -1,10 +1,13 @@
 # SpendLog
 
-A simple personal expense tracker built with React and TypeScript.  
-You can track your income and expenses, see where your money goes, and export your data anytime.
+A full-stack personal expense tracker built with React and TypeScript, powered by Supabase for authentication and database management.
+
+Track your income and expenses, analyze your spending habits, and manage your finances with a clean and responsive interface.
 
 ---
-
+## Live Demo
+- [View Live App](https://expense-tracker-eight-ruby-53.vercel.app/)
+---
 ## Features
 - User authentication (Sign up & Login)
 - Add income and expense transactions  
@@ -51,16 +54,17 @@ You can track your income and expenses, see where your money goes, and export yo
 
 ---
 
-## Known Issues / Future Improvements
+## Known Limitations
 
 - No edit feature yet (only delete and re-add)  
-- No budget tracking or spending limits  
+- No budget tracking or spending limits
+- Categories are currently hardcoded  
 
 ---
 
 ## Future Plans
 
-- Add backend support (save data online)  
+- Add edit/update transaction feature 
 - Allow editing transactions  
 - Add budgets and spending goals 
 - Improve UI/UX (loading states, better feedback) 
