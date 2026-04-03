@@ -116,6 +116,34 @@
   border-color: var(--border-hover);
 }
 
+.signout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  margin-top: 4px;
+}
+
+.signout-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.signout-btn:hover {
+  background: var(--expense-dim);
+  border-color: rgba(255, 107, 107, 0.2);
+  color: var(--expense);
+}
+
 @media (max-width: 1024px) {
   .sidebar {
     display: none;

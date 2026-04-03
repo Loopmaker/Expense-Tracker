@@ -34,6 +34,9 @@
 .mobile-nav-item:hover { color: var(--text); }
 .mobile-nav-item.active { color: var(--accent); }
 
+.mobile-nav-item.signout:hover {
+  color: var(--expense);
+}
 @media (max-width: 1024px) {
   .mobile-nav {
     display: flex;

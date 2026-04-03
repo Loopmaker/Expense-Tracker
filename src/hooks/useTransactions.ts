@@ -1,47 +1,57 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '../lib/supabase';
 import { CATEGORIES } from '../constant';
 import type { Transaction, NewTransactionData } from '../types';
 
-const STORAGE_KEY = 'gastos_tx';
+export function useTransactions(userId: string) {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading]           = useState(true);
 
-function loadFromStorage(): Transaction[] {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') as Transaction[];
-  } catch {
-    return [];
-  }
-}
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('transactions')
+        .select('*')
+        .eq('user_id', userId)
+        .order('date', { ascending: false });
 
-function persist(txs: Transaction[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(txs));
-}
+      if (!error && data) {
+        setTransactions(data as Transaction[]);
+      }
+      setLoading(false);
+    }
 
-export function useTransactions() {
-  const [transactions, setTransactions] = useState<Transaction[]>(loadFromStorage);
+    load();
+  }, [userId]);
 
-  const addTransaction = useCallback((data: NewTransactionData) => {
-    const newTx: Transaction = { ...data, id: Date.now() };
-    setTransactions((prev) => {
-      const next = [...prev, newTx];
-      persist(next);
-      return next;
-    });
-  }, []);
+  const addTransaction = useCallback(async (data: NewTransactionData) => {
+    const { data: inserted, error } = await supabase
+      .from('transactions')
+      .insert({ ...data, user_id: userId })
+      .select()
+      .single();
 
-  const deleteTransaction = useCallback((id: number) => {
-    setTransactions((prev) => {
-      const next = prev.filter((t) => t.id !== id);
-      persist(next);
-      return next;
-    });
-  }, []);
+    if (!error && inserted) {
+      setTransactions((prev) => [inserted as Transaction, ...prev]);
+    }
+  }, [userId]);
+
+  const deleteTransaction = useCallback(async (id: number) => {
+    const { error } = await supabase
+      .from('transactions')
+      .delete()
+      .eq('id', id);
+
+    if (!error) {
+      setTransactions((prev) => prev.filter((t) => t.id !== id));
+    }
+  }, [userId]);
 
   const exportCSV = useCallback(
     (onEmpty: () => void, onSuccess: () => void) => {
-      if (transactions.length === 0) {
-        onEmpty();
-        return;
-      }
+      if (transactions.length === 0) { onEmpty(); return; }
+
       const header = 'Date,Description,Category,Type,Amount,Notes';
       const rows = transactions.map((t) => {
         const cat = CATEGORIES.find((c) => c.id === t.category);
@@ -54,10 +64,11 @@ export function useTransactions() {
           `"${(t.notes || '').replace(/"/g, '""')}"`,
         ].join(',');
       });
-      const csv = [header, ...rows].join('\n');
+
+      const csv  = [header, ...rows].join('\n');
       const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
       a.href = url;
       a.download = `gastos-export-${new Date().toISOString().slice(0, 10)}.csv`;
       a.click();
@@ -67,5 +78,5 @@ export function useTransactions() {
     [transactions],
   );
 
-  return { transactions, addTransaction, deleteTransaction, exportCSV };
+  return { transactions, loading, addTransaction, deleteTransaction, exportCSV };
 }

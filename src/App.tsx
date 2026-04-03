@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Sidebar }              from './components/Sidebar/Sidebar';
-import { MobileNav }            from './components/MobileNav/MobileNav';
-import { Dashboard }            from './components/Dashboard/Dashboard';
-import { TransactionPage }      from './components/TransactionPage/TransactionPage';
-import { AddTransactionModal }  from './components/AddTransactionModal/AddTransactionModal';
-import { Toast }                from './components/Toast/Toast';
-import { useTransactions }      from './hooks/useTransactions';
-import { useToast }             from './hooks/useToast';
+import { Sidebar }             from './components/Sidebar/Sidebar';
+import { MobileNav }           from './components/MobileNav/MobileNav';
+import { Dashboard }           from './components/Dashboard/Dashboard';
+import { TransactionPage }     from './components/TransactionPage/TransactionPage';
+import { AddTransactionModal } from './components/AddTransactionModal/AddTransactionModal';
+import { Toast }               from './components/Toast/Toast';
+import { AuthPage }            from './components/AuthPage/AuthPage';
+import { useTransactions }     from './hooks/useTransactions';
+import { useToast }            from './hooks/useToast';
+import { useAuth }             from './hooks/useAuth';
 import type { ViewDate, ViewType } from './types';
 
 function initialViewDate(): ViewDate {
@@ -15,11 +17,14 @@ function initialViewDate(): ViewDate {
 }
 
 export function App() {
+  const { user, loading: authLoading, signIn, signUp, signOut } = useAuth();
+
   const [activeView, setActiveView] = useState<ViewType>('dashboard');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewDate, setViewDate]       = useState<ViewDate>(initialViewDate);
 
-  const { transactions, addTransaction, deleteTransaction, exportCSV } = useTransactions();
+  const { transactions, addTransaction, deleteTransaction, exportCSV } =
+    useTransactions(user?.id ?? '');
   const { toast, showToast } = useToast();
 
   useEffect(() => {
@@ -78,9 +83,13 @@ export function App() {
     );
   }
 
+  if (authLoading) return null;
+
+  if (!user) return <AuthPage onSignIn={signIn} onSignUp={signUp} />;
+
   return (
     <>
-      <Sidebar activeView={activeView} onNavigate={navigate} onExport={handleExport} />
+      <Sidebar activeView={activeView} onNavigate={navigate} onExport={handleExport} onSignOut={signOut} />
 
       <main className="main">
         {activeView === 'dashboard' && (
@@ -110,7 +119,7 @@ export function App() {
 
       <Toast toast={toast} />
 
-      <MobileNav activeView={activeView} onNavigate={navigate} onExport={handleExport} />
+      <MobileNav activeView={activeView} onNavigate={navigate} onExport={handleExport} onSignOut={signOut}/>
     </>
   );
 }
