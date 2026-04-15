@@ -33,7 +33,7 @@ export function TransactionPage({ transactions, onDelete, onOpenModal }: Transac
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    return [...transactions].reverse().filter((t) => {
+    return transactions.filter((t) => {
       const matchSearch =
         t.description.toLowerCase().includes(q) ||
         (t.notes && t.notes.toLowerCase().includes(q));
