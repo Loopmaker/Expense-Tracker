@@ -39,7 +39,7 @@ export function Dashboard({
   const income  = monthly.filter((t) => t.amount > 0).reduce((a, t) => a + t.amount, 0);
   const expense = monthly.filter((t) => t.amount < 0).reduce((a, t) => a + t.amount, 0);
   const balance = income + expense;
-  const recent  = [...monthly].reverse().slice(0, 6);
+  const recent  = monthly.slice(0, 6);
 
   return (
     <section className="view-section">
